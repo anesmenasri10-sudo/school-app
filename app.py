@@ -39,14 +39,14 @@ st.write("---")
 # اختيار الطور التعليمي
 stage = st.selectbox("اختر الطور التعليمي:", ["التعليم الابتدائي", "التعليم المتوسط", "التعليم الثانوي"])
 
-subjects_data = {} # تخزن اسم المادة والمعامل
+subjects_data = {}
 
 if stage == "التعليم الابتدائي":
     year = st.selectbox("اختر السنة:", ["السنة الأولى ابتدائي", "السنة الثانية ابتدائي", "السنة الثالثة ابتدائي", "السنة الرابعة ابتدائي", "السنة الخامسة ابتدائي"])
     if year in ["السنة الأولى ابتدائي", "السنة الثانية ابتدائي"]:
-        subjects_data = {"اللغة العربية": 5, "الرياضيات": 4, "التربية الإسلامية": 1, "التربية المدنية": 1, "التربية العلمية والتكنولوجية": 1, "التربية البدنية": 1}
+        subjects_list = ["اللغة العربية", "الرياضيات", "التربية الإسلامية", "التربية المدنية", "التربية العلمية والتكنولوجية", "التربية البدنية"]
     else:
-        subjects_data = {"اللغة العربية": 5, "الرياضيات": 4, "اللغة الفرنسية": 2, "التربية الإسلامية": 1, "التربية المدنية": 1, "التربية العلمية والتكنولوجية": 2, "التربية البدنية": 1}
+        subjects_list = ["اللغة العربية", "الرياضيات", "اللغة الفرنسية", "التربية الإسلامية", "التربية المدنية", "التربية العلمية والتكنولوجية", "التربية البدنية"]
 
 elif stage == "التعليم المتوسط":
     year = st.selectbox("اختر السنة:", ["السنة الأولى متوسط", "السنة الثانية متوسط", "السنة الثالثة متوسط", "السنة الرابعة متوسط (بام)"])
@@ -95,24 +95,24 @@ else:  # التعليم الثانوي
             subjects_data = {"اللغة الأجنبية الأولى": 6, "اللغة العربية": 5, "اللغة الأجنبية الثانية": 5, "اللغة الأجنبية الثالثة": 4, "الفلسفة": 2, "التاريخ والجغرافيا": 2, "الرياضيات": 2, "العلوم الإسلامية": 2, "التربية البدنية": 1}
 
 st.write("---")
-if stage == "التعليم الابتدائي":
-    st.markdown("### 📝 أدخل علامات الاختبارات فقط:")
-else:
-    st.markdown("### 📝 أدخل النقاط (التقويم المستمر، الفرض، والاختبار):")
 
 total_score = 0.0
 total_coef = 0.0
 
-for subj, default_coef in subjects_data.items():
-    st.markdown(f"**{subj}**")
-    if stage == "التعليم الابتدائي":
-        col1, col2 = st.columns(2)
-        with col1:
-            coef = st.number_input("المعامل", min_value=1, max_value=10, value=default_coef, key=f"coef_{subj}")
-        with col2:
-            exam_mark = st.number_input("علامة الاختبار (من 20)", min_value=0.0, max_value=20.0, value=10.0, step=0.5, key=f"exam_{subj}")
-        subj_average = exam_mark
-    else:
+if stage == "التعليم الابتدائي":
+    st.markdown("### 📝 أدخل علامات الاختبارات لكل مادة (بدون معاملات):")
+    grades = []
+    for subj in subjects_list:
+        grade = st.number_input(f"{subj}", min_value=0.0, max_value=20.0, value=10.0, step=0.5, key=f"primary_{subj}")
+        grades.append(grade)
+    
+    if len(grades) > 0:
+        total_score = sum(grades)
+        total_coef = len(grades) # عدد المواد هو القاسم في الابتدائي
+else:
+    st.markdown("### 📝 أدخل النقاط (التقويم المستمر، الفرض، والاختبار):")
+    for subj, default_coef in subjects_data.items():
+        st.markdown(f"**{subj}**")
         col1, col2, col3, col4 = st.columns(4)
         with col1:
             coef = st.number_input("المعامل", min_value=1, max_value=10, value=default_coef, key=f"coef_{subj}")
@@ -123,12 +123,10 @@ for subj, default_coef in subjects_data.items():
         with col4:
             exam_mark = st.number_input("الاختبار", min_value=0.0, max_value=20.0, value=10.0, step=0.5, key=f"exam_{subj}")
         
-        # حساب معدل المادة للمتوسط والثانوي
         subj_average = (((eval_mark + assig_mark) / 2) + (exam_mark * 2)) / 3
-    
-    total_score += subj_average * coef
-    total_coef += coef
-    st.write("")
+        total_score += subj_average * coef
+        total_coef += coef
+        st.write("")
 
 st.write("---")
 
@@ -139,7 +137,7 @@ if st.button("احسب المعدل الفصلي 🚀", use_container_width=True
         if gpa >= 10:
             st.balloons()
     else:
-        st.error("خطأ في حساب المعاملات.")
+        st.error("خطأ في الحساب.")
 
 st.write("---")
 st.markdown("<p style='text-align: center; color: #1b5e20; font-weight: bold;'>فضلاً وليس أمراً، انشر الموقع لأصدقائك وزملائك ليستفيد الجميع! 🤝✨</p>", unsafe_allow_html=True)
