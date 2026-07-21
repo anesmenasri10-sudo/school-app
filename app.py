@@ -1,9 +1,38 @@
 import streamlit as st
 
-st.set_page_config(page_title="حساب المعدل المدرسي - الجزائر", page_icon="📚", layout="centered")
+# إعدادات الصفحة والتصميم العام بألوان متدرجة وعصرية
+st.set_page_config(page_title="حساب المعدل المدرسي - الجزائر", page_icon="🎓", layout="centered")
 
-st.markdown("<h1 style='text-align: center; color: #1E3A8A;'>منصة حساب المعدل المدرسي 🎓</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: gray;'>أدخل مستواك، شعبتك، ونقاطك لتحساب معدلك بدقة</p>", unsafe_allow_html=True)
+st.markdown("""
+    <style>
+    .main {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+    .stButton>button {
+        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .stButton>button:hover {
+        background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%);
+        color: white;
+    }
+    h1 {
+        background: -webkit-linear-gradient(45deg, #1d2671, #c33764);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        font-weight: bold;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown("<h1>منصة حساب المعدل المدرسي 🎓</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #555;'>اختر مستواك وشعبتك لحساب معدلك بتصميم رائع ومتدرج</p>", unsafe_allow_html=True)
 st.write("---")
 
 # اختيار السنة الدراسية
