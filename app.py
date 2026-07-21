@@ -1,43 +1,146 @@
 import streamlit as st
 
-st.set_page_config(page_title="حساب المعدل المدرسي", page_icon="📚", layout="centered")
+st.set_page_config(page_title="حساب المعدل المدرسي - الجزائر", page_icon="📚", layout="centered")
 
-st.markdown("<h1 style='text-align: center; color: #1E3A8A;'>حساب المعدل المدرسي 🎓</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #1E3A8A;'>منصة حساب المعدل المدرسي 🎓</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: gray;'>أدخل مستواك، شعبتك، ونقاطك لتحساب معدلك بدقة</p>", unsafe_allow_html=True)
 st.write("---")
 
 # اختيار السنة الدراسية
 grade_level = st.selectbox("اختر مستواك الدراسي:", ["السنة الأولى ثانوي", "السنة الثانية ثانوي"])
 
-# إدخال عدد المواد
-num_subjects = st.number_input("أدخل عدد المواد:", min_value=1, max_value=20, value=5)
+# اختيار الشعبة بناءً على السنة
+if grade_level == "السنة الأولى ثانوي":
+    stream = st.selectbox("اختر الشعبة:", ["جذع مشترك علوم وتكنولوجيا", "جذع مشترك آداب"])
+    if stream == "جذع مشترك علوم وتكنولوجيا":
+        subjects_info = {
+            "الرياضيات": 5,
+            "علوم الطبيعة والحياة": 4,
+            "الفيزياء والكيمياء": 4,
+            "اللغة العربية": 3,
+            "اللغة الفرنسية": 3,
+            "اللغة الإنجليزية": 2,
+            "التاريخ والجغرافيا": 2,
+            "العلوم الإسلامية": 2,
+            "التربية المدنية": 1,
+            "الإعلام الآلي": 2,
+            "التربية البدنية": 1
+        }
+    else:
+        subjects_info = {
+            "اللغة العربية": 5,
+            "الرياضيات": 3,
+            "التاريخ والجغرافيا": 4,
+            "اللغة الفرنسية": 3,
+            "اللغة الإنجليزية": 3,
+            "علوم الطبيعة والحياة": 2,
+            "الفيزياء والكيمياء": 2,
+            "العلوم الإسلامية": 2,
+            "التربية المدنية": 1,
+            "التربية البدنية": 1
+        }
+else:  # السنة الثانية ثانوي
+    stream = st.selectbox("اختر الشعبة:", ["علوم تجريبية", "رياضيات", "تقني رياضي", "تسيير واقتصاد", "آداب وفلسفة", "لغات أجنبية"])
+    if stream == "علوم تجريبية":
+        subjects_info = {
+            "علوم الطبيعة والحياة": 5,
+            "الرياضيات": 5,
+            "الفيزياء والكيمياء": 5,
+            "اللغة العربية": 3,
+            "اللغة الفرنسية": 2,
+            "اللغة الإنجليزية": 2,
+            "التاريخ والجغرافيا": 2,
+            "العلوم الإسلامية": 2,
+            "الفلسفة": 2,
+            "التربية البدنية": 1
+        }
+    elif stream == "رياضيات":
+        subjects_info = {
+            "الرياضيات": 7,
+            "الفيزياء والكيمياء": 6,
+            "علوم الطبيعة والحياة": 2,
+            "اللغة العربية": 3,
+            "اللغة الفرنسية": 2,
+            "اللغة الإنجليزية": 2,
+            "التاريخ والجغرافيا": 2,
+            "العلوم الإسلامية": 2,
+            "الفلسفة": 2,
+            "التربية البدنية": 1
+        }
+    elif stream == "تقني رياضي":
+        subjects_info = {
+            "الرياضيات": 6,
+            "العلوم التقنية (التخصص)": 6,
+            "الفيزياء والكيمياء": 5,
+            "اللغة العربية": 3,
+            "اللغة الفرنسية": 2,
+            "اللغة الإنجليزية": 2,
+            "التاريخ والجغرافيا": 2,
+            "العلوم الإسلامية": 2,
+            "الفلسفة": 2,
+            "التربية البدنية": 1
+        }
+    elif stream == "تسيير واقتصاد":
+        subjects_info = {
+            "الرياضيات": 5,
+            "التسيير المحاسبي والمالي": 6,
+            "الاقتصاد والمناجمنت": 5,
+            "القانون": 2,
+            "اللغة العربية": 3,
+            "اللغة الفرنسية": 2,
+            "اللغة الإنجليزية": 2,
+            "التاريخ والجغرافيا": 2,
+            "العلوم الإسلامية": 2,
+            "الفلسفة": 2,
+            "التربية البدنية": 1
+        }
+    elif stream == "آداب وفلسفة":
+        subjects_info = {
+            "اللغة العربية": 6,
+            "الفلسفة": 6,
+            "التاريخ والجغرافيا": 4,
+            "الرياضيات": 2,
+            "اللغة الفرنسية": 3,
+            "اللغة الإنجليزية": 3,
+            "العلوم الإسلامية": 2,
+            "التربية البدنية": 1
+        }
+    else:  # لغات أجنبية
+        subjects_info = {
+            "اللغة العربية": 5,
+            "اللغة الأجنبية الأولى": 5,
+            "اللغة الأجنبية الثانية": 5,
+            "اللغة الأجنبية الثالثة": 4,
+            "التاريخ والجغرافيا": 2,
+            "الرياضيات": 2,
+            "العلوم الإسلامية": 2,
+            "الفلسفة": 2,
+            "التربية البدنية": 1
+        }
 
-subjects = []
-coefficients = []
+st.write("---")
+st.write("### أدخل نقاط المواد:")
+
 grades = []
+coefficients = []
 
-st.write("### أدخل تفاصيل المواد:")
-for i in range(num_subjects):
-    col1, col2 = st.columns(2)
-    with col1:
-        subj = st.text_input(f"اسم المادة {i+1}", value=f"المادة {i+1}", key=f"subj_{i}")
-    with col2:
-        coef = st.number_input(f"المعامل لـ {subj}", min_value=1.0, max_value=10.0, value=1.0, key=f"coef_{i}")
-    
-    grade = st.number_input(f"النقطة لـ {subj} (من 20)", min_value=0.0, max_value=20.0, value=10.0, key=f"grade_{i}")
-    
-    subjects.append(subj)
-    coefficients.append(coef)
+for subj, coef in subjects_info.items():
+    grade = st.number_input(f"{subj} (المعامل: {coef})", min_value=0.0, max_value=20.0, value=10.0, step=0.25, key=subj)
     grades.append(grade)
-    st.write("---")
+    coefficients.append(coef)
 
-if st.button("حساب المعدل 🚀", use_container_width=True):
+st.write("---")
+
+if st.button("حساب المعدل النهائي 🚀", use_container_width=True):
     total_score = sum(g * c for g, c in zip(grades, coefficients))
     total_coef = sum(coefficients)
     
     if total_coef > 0:
         gpa = total_score / total_coef
         st.success(f"معدلك لهذا الفصل هو : {gpa:.2f} / 20 🏆")
+        if gpa >= 10:
+            st.balloons()
     else:
-        st.error("مجموع المعاملات لا يمكن أن يكون صفراً!")
+        st.error("حدث خطأ في حساب المعاملات.")
 
 st.markdown("<p style='text-align: center; color: gray;'>تم التطوير بواسطة Anes Menasri © 2026</p>", unsafe_allow_html=True)
