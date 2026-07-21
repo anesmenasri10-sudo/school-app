@@ -1,7 +1,7 @@
 import streamlit as st
 
 # إعدادات الصفحة
-st.set_page_config(page_title="حساب المعدل المدرسي - الجزائر", page_icon="🇩🇿", layout="wide")
+st.set_page_config(page_title="حساب المعدل المدرسي - أنيس مناصري", page_icon="🇩🇿", layout="wide")
 
 st.markdown("""
     <style>
@@ -40,13 +40,14 @@ st.write("---")
 stage = st.selectbox("اختر الطور التعليمي:", ["التعليم الابتدائي", "التعليم المتوسط", "التعليم الثانوي"])
 
 subjects_data = {}
+primary_subjects_list = []
 
 if stage == "التعليم الابتدائي":
     year = st.selectbox("اختر السنة:", ["السنة الأولى ابتدائي", "السنة الثانية ابتدائي", "السنة الثالثة ابتدائي", "السنة الرابعة ابتدائي", "السنة الخامسة ابتدائي"])
     if year in ["السنة الأولى ابتدائي", "السنة الثانية ابتدائي"]:
-        subjects_list = ["اللغة العربية", "الرياضيات", "التربية الإسلامية", "التربية المدنية", "التربية العلمية والتكنولوجية", "التربية البدنية"]
+        primary_subjects_list = ["اللغة العربية", "الرياضيات", "التربية الإسلامية", "التربية المدنية", "التربية العلمية والتكنولوجية", "التربية البدنية"]
     else:
-        subjects_list = ["اللغة العربية", "الرياضيات", "اللغة الفرنسية", "التربية الإسلامية", "التربية المدنية", "التربية العلمية والتكنولوجية", "التربية البدنية"]
+        primary_subjects_list = ["اللغة العربية", "الرياضيات", "اللغة الفرنسية", "التربية الإسلامية", "التربية المدنية", "التربية العلمية والتكنولوجية", "التربية البدنية"]
 
 elif stage == "التعليم المتوسط":
     year = st.selectbox("اختر السنة:", ["السنة 1 متوسط", "السنة 2 متوسط", "السنة 3 متوسط", "السنة 4 متوسط"])
@@ -157,17 +158,17 @@ total_score = 0.0
 total_coef = 0.0
 
 if stage == "التعليم الابتدائي":
-    st.markdown("### 📝 أدخل علامات الاختبارات لكل مادة (بدون معاملات):")
+    st.markdown("### 📝 أدخل علامات المواد (من 10):")
     grades = []
-    for subj in subjects_list:
-        grade = st.number_input(f"{subj}", min_value=0.0, max_value=20.0, value=10.0, step=0.5, key=f"primary_{subj}")
+    for subj in primary_subjects_list:
+        grade = st.number_input(f"{subj}", min_value=0.0, max_value=10.0, value=5.0, step=0.25, key=f"primary_{subj}")
         grades.append(grade)
     
     if len(grades) > 0:
         total_score = sum(grades)
         total_coef = len(grades)
 else:
-    st.markdown("### 📝 أدخل النقاط (التقويم المستمر، الفرض، والاختبار):")
+    st.markdown("### 📝 أدخل النقاط (التقويم المستمر، الفرض، والاختبار من 20):")
     for subj, default_coef in subjects_data.items():
         st.markdown(f"**{subj}**")
         col1, col2, col3, col4 = st.columns(4)
@@ -190,12 +191,15 @@ st.write("---")
 if st.button("احسب المعدل الفصلي 🚀", use_container_width=True):
     if total_coef > 0:
         gpa = total_score / total_coef
-        st.success(f"معدلك الفصلي هو : {gpa:.2f} / 20 🏆")
-        if gpa >= 10:
+        pass_limit = 5.0 if stage == "التعليم الابتدائي" else 10.0
+        max_limit = 10.0 if stage == "التعليم الابتدائي" else 20.0
+        
+        st.success(f"معدلك الفصلي هو : {gpa:.2f} / {max_limit} 🏆")
+        if gpa >= pass_limit:
             st.balloons()
     else:
         st.error("خطأ في الحساب.")
 
 st.write("---")
 st.markdown("<p style='text-align: center; color: #1b5e20; font-weight: bold;'>فضلاً وليس أمراً، انشر الموقع لأصدقائك وزملائك ليستفيد الجميع! 🤝✨</p>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #1b5e20;'>تم التطوير بواسطة Anes Menasri © 2026 💻</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #1b5e20;'>تم التطوير بواسطة أنيس مناصري © 2026 💻</p>", unsafe_allow_html=True)
