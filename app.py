@@ -158,4 +158,45 @@ else:
         elif stream == "تسيير واقتصاد": 
             subjects_data = {"التسيير المحاسبي والمالي": 6, "الاقتصاد والمناجمنت": 5, "الرياضيات": 5, "اللغة العربية وآدابها": 3, "الفلسفة": 2, "اللغة الفرنسية": 2, "اللغة الإنجليزية": 2, "التاريخ والجغرافيا": 2, "العلوم الإسلامية": 2}
         elif stream == "آداب وفلسفة": 
-            subjects_data = {"اللغة العربية وآدابها": 6, "الفلسفة": 6, "التاريخ والجغرافيا": 4, "اللغة الفرنسية": 3,
+            subjects_data = {"اللغة العربية وآدابها": 6, "الفلسفة": 6, "التاريخ والجغرافيا": 4, "اللغة الفرنسية": 3, "اللغة الإنجليزية": 3, "الرياضيات": 2, "العلوم الإسلامية": 2}
+        else: 
+            subjects_data = {"اللغة الأجنبية الأولى": 6, "اللغة العربية وآدابها": 5, "اللغة الأجنبية الثانية": 5, "اللغة الأجنبية الثالثة": 4, "الفلسفة": 2, "التاريخ والجغرافيا": 2, "الرياضيات": 2, "العلوم الإسلامية": 2}
+    
+    if study_amazigh == "نعم": subjects_data["اللغة الأمازيغية"] = 2
+    if study_pe == "نعم": subjects_data["التربية البدنية والرياضية"] = 1
+
+# --- واجهة إدخال النقاط والحساب ---
+st.write("---")
+total_score = 0.0
+total_coef = 0.0
+
+if stage == "التعليم الابتدائي":
+    st.markdown("### 📝 أدخل علامات المواد (من 10):")
+    grades = [st.number_input(f"{subj}", min_value=0.0, max_value=10.0, value=5.0, step=0.25, key=f"p_grade_{subj}") for subj in primary_subjects_list]
+    total_score, total_coef = sum(grades), len(grades)
+else:
+    st.markdown("### 📝 أدخل النقاط (من 20):")
+    for subj, default_coef in subjects_data.items():
+        st.markdown(f"**{subj}**")
+        col1, col2, col3, col4 = st.columns(4)
+        coef = col1.number_input("المعامل", 1, 10, default_coef, key=f"c_{subj}")
+        eval_m = col2.number_input("تقويم", 0.0, 20.0, 10.0, 0.5, key=f"e_{subj}")
+        assig_m = col3.number_input("فرض", 0.0, 20.0, 10.0, 0.5, key=f"a_{subj}")
+        exam_m = col4.number_input("اختبار", 0.0, 20.0, 10.0, 0.5, key=f"x_{subj}")
+        
+        subj_avg = (((eval_m + assig_m) / 2) + (exam_m * 2)) / 3
+        total_score += subj_avg * coef
+        total_coef += coef
+
+if st.button("احسب المعدل الفصلي 🚀", use_container_width=True):
+    if total_coef > 0:
+        gpa = total_score / total_coef
+        max_scale = "10" if stage == 'التعليم الابتدائي' else "20"
+        st.success(f"معدلك الفصلي هو : {gpa:.2f} / {max_scale} 🏆")
+        if gpa >= (5.0 if stage == 'التعليم الابتدائي' else 10.0):
+            st.balloons()
+    else:
+        st.error("يرجى اختيار مادة واحدة على الأقل!")
+
+st.write("---")
+st.markdown("<p style='text-align: center; color: #1b5e20;'>تم التطوير بواسطة أنيس مناصري © 2026 💻</p>", unsafe_allow_html=True)
